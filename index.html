@@ -396,35 +396,19 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
   .stats-band::before{position:absolute}
 }
 
-/* ---------- Hero atmosphere (ported from a proven community pattern —
-   21st.dev's "Background Gradient Animation" by Aceternity: soft radial-
-   gradient color pools blended with mix-blend-mode:hard-light through a
-   gooey SVG filter, one of them following the pointer). Sits behind the
-   existing #tooth canvas — adds color depth, doesn't replace anything. */
-.gradient-bg{position:absolute;inset:0;overflow:hidden;filter:url(#hero-goo) blur(30px);z-index:0}
-.g-blob{position:absolute;width:60%;height:60%;top:20%;left:20%;border-radius:50%;mix-blend-mode:hard-light;opacity:.75;transform-origin:center center}
-.g-1{background:radial-gradient(circle at center,rgba(184,150,62,.9) 0,rgba(184,150,62,0) 60%);animation:gFirst 9s ease-in-out infinite}
-.g-2{background:radial-gradient(circle at center,rgba(122,155,120,.85) 0,rgba(122,155,120,0) 60%);animation:gSecond 11s ease-in-out infinite}
-.g-3{background:radial-gradient(circle at center,rgba(196,120,110,.8) 0,rgba(196,120,110,0) 60%);animation:gThird 14s ease-in-out infinite}
-.g-4{background:radial-gradient(circle at center,rgba(120,140,170,.75) 0,rgba(120,140,170,0) 60%);animation:gFourth 10s ease-in-out infinite;opacity:.6}
-.g-pointer{width:100%;height:100%;top:0;left:0;background:radial-gradient(circle at center,rgba(184,150,62,.5) 0,rgba(184,150,62,0) 55%);opacity:.5;transition:transform 1.1s var(--ease)}
-@keyframes gFirst{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(35%,25%) scale(1.15)}}
-@keyframes gSecond{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30%,20%) scale(.92)}}
-@keyframes gThird{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(25%,-30%) scale(1.1)}}
-@keyframes gFourth{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-25%,-20%) scale(1.2)}}
-@media(prefers-reduced-motion:reduce){.g-blob{animation:none!important}}
+/* ---------- Hero atmosphere v2: real-time WebGL shader ----------
+   Ported from 21st.dev's "Shader Animation" (26k uses) — a Three.js
+   fragment shader that renders looping, colorful concentric rings in
+   real time (not a CSS trick). Much more intense than the earlier
+   soft gradient-blob pass — this is the "crazy" version. Blended with
+   multiply so it reads as vivid color moving through the page instead
+   of a black rectangle sitting on top of it. */
+.shader-wrap{position:absolute;inset:0;overflow:hidden;z-index:0;mix-blend-mode:multiply;opacity:.85}
+#shaderCanvas{display:block;width:100%;height:100%}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <filter id="hero-goo">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
-      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo"/>
-      <feBlend in="SourceGraphic" in2="goo"/>
-    </filter>
-  </defs>
-</svg>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="nav">
@@ -438,13 +422,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
 
   <!-- Hero -->
   <section class="hero" id="top" aria-labelledby="hero-h">
-    <div class="gradient-bg" id="gradientBg" aria-hidden="true">
-      <div class="g-blob g-1"></div>
-      <div class="g-blob g-2"></div>
-      <div class="g-blob g-3"></div>
-      <div class="g-blob g-4"></div>
-      <div class="g-blob g-pointer" id="gradientPointer"></div>
-    </div>
+    <div class="shader-wrap" aria-hidden="true"><canvas id="shaderCanvas"></canvas></div>
     <canvas id="tooth" aria-hidden="true"></canvas>
     <div class="hero-veil" aria-hidden="true"></div>
     <div class="hero-inner">
@@ -702,20 +680,85 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
   'use strict';
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ================= Gradient pointer-follow (hero atmosphere) ================= */
-  if(!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches){
-    var heroSection = document.getElementById('top');
-    var gradientPointer = document.getElementById('gradientPointer');
-    if(heroSection && gradientPointer){
-      heroSection.addEventListener('mousemove', function(e){
-        var rect = heroSection.getBoundingClientRect();
-        var relX = e.clientX - rect.left - rect.width / 2;
-        var relY = e.clientY - rect.top - rect.height / 2;
-        gradientPointer.style.transform = 'translate(' + relX * 0.4 + 'px,' + relY * 0.4 + 'px)';
-      });
-      heroSection.addEventListener('mouseleave', function(){ gradientPointer.style.transform = ''; });
+  /* ================= WebGL ripple shader (hero atmosphere) =================
+     Ported from 21st.dev's "Shader Animation" — same Three.js scene/shader,
+     minus the React wrapper. Paused when reduced-motion is on or the tab/
+     hero is out of view, same discipline as the tooth canvas below. */
+  (function(){
+    var shaderCanvas = document.getElementById('shaderCanvas');
+    if(!shaderCanvas || typeof THREE === 'undefined' || reduceMotion) return;
+
+    var vertexShader = 'void main(){gl_Position=vec4(position,1.0);}';
+    var fragmentShader = [
+      '#define TWO_PI 6.2831853072',
+      '#define PI 3.14159265359',
+      'precision highp float;',
+      'uniform vec2 resolution;',
+      'uniform float time;',
+      'void main(void){',
+      '  vec2 uv=(gl_FragCoord.xy*2.0-resolution.xy)/min(resolution.x,resolution.y);',
+      '  float t=time*0.05;',
+      '  float lineWidth=0.0025;',
+      '  vec3 color=vec3(0.0);',
+      '  for(int j=0;j<3;j++){',
+      '    for(int i=0;i<5;i++){',
+      '      color[j]+=lineWidth*float(i*i)/abs(fract(t-0.01*float(j)+float(i)*0.01)*5.0-length(uv)+mod(uv.x+uv.y,0.2));',
+      '    }',
+      '  }',
+      '  gl_FragColor=vec4(color[0],color[1],color[2],1.0);',
+      '}'
+    ].join('\n');
+
+    // WebGL is unavailable in some browsers/sandboxes (disabled by the user,
+    // old hardware, locked-down corporate machines, some headless test
+    // environments). If context creation fails, back out quietly — the
+    // cream background and tooth canvas underneath still work fine on
+    // their own, so this must never throw an uncaught error.
+    try {
+      var camera = new THREE.Camera();
+      camera.position.z = 1;
+      var scene = new THREE.Scene();
+      var geometry = new THREE.PlaneGeometry(2, 2);
+      var uniforms = { time: { value: 1.0 }, resolution: { value: new THREE.Vector2() } };
+      var material = new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: vertexShader, fragmentShader: fragmentShader });
+      scene.add(new THREE.Mesh(geometry, material));
+
+      var renderer = new THREE.WebGLRenderer({ canvas: shaderCanvas, antialias: true, failIfMajorPerformanceCaveat: false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      var resize = function(){
+        var w = shaderCanvas.clientWidth, h = shaderCanvas.clientHeight;
+        renderer.setSize(w, h, false);
+        uniforms.resolution.value.x = renderer.domElement.width;
+        uniforms.resolution.value.y = renderer.domElement.height;
+      };
+      resize();
+      window.addEventListener('resize', resize);
+
+      var rafId = null, shaderVisible = true;
+      var loop = function(){
+        uniforms.time.value += 0.05;
+        renderer.render(scene, camera);
+        rafId = requestAnimationFrame(loop);
+      };
+      var start = function(){ if(rafId === null){ loop(); } };
+      var stop = function(){ if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; } };
+
+      if('IntersectionObserver' in window){
+        var shaderObs = new IntersectionObserver(function(entries){
+          shaderVisible = entries[0].isIntersecting;
+          if(shaderVisible){ start(); } else { stop(); }
+        }, { threshold: 0.05 });
+        shaderObs.observe(document.getElementById('top'));
+        document.addEventListener('visibilitychange', function(){
+          if(document.hidden){ stop(); } else if(shaderVisible){ start(); }
+        });
+      }
+      start();
+    } catch(err) {
+      console.error('shader background unavailable, continuing without it:', err.message);
     }
-  }
+  })();
 
   /* ================= 3D particle tooth ================= */
   var canvas = document.getElementById('tooth');
