@@ -113,15 +113,17 @@ body{animation:pageIn .5s var(--ease) both}
   50%{transform:translate(-2%,4%) scale(.96) rotate(-2deg)}
   75%{transform:translate(-4%,-2%) scale(1.05) rotate(1deg)}
 }
+/* No circle/oval backing behind the icon this time — it read as an
+   odd egg shape. Just the mark itself, floating free over the moving
+   gradient mesh. */
 .tooth-diagram{
-  position:relative;z-index:1;width:min(42vw,220px);margin:0 auto 1.8rem;
-  aspect-ratio:1/1;border-radius:50%;
-  background:linear-gradient(135deg, rgba(109,40,217,.12), rgba(5,150,105,.12));
-  box-shadow:0 20px 60px -20px rgba(109,40,217,.35);
+  position:relative;z-index:1;width:min(30vw,140px);margin:0 auto 1.8rem;
+  aspect-ratio:1/1;
   display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 16px 30px rgba(109,40,217,.3));
   animation:toothIn .8s var(--ease) both, toothBob 4s ease-in-out 1s infinite;
 }
-.tooth-diagram svg{width:52%;height:52%}
+.tooth-diagram svg{width:100%;height:100%}
 .tooth-shape{fill:url(#toothGradient)}
 @keyframes toothIn{
   0%{transform:scale(.4) rotate(-16deg);opacity:0}
