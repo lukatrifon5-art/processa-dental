@@ -1,19 +1,22 @@
 /* Processa — shared styles across all pages.
-   Third direction: clean white + vivid clinical mint, replacing the two
-   earlier dark attempts (navy blueprint, warm charcoal) entirely — explicit
-   ask this time was "no dark colors." Sora (bold, rounded geometric) for
-   display type instead of the two serif/technical faces already tried;
-   Inter for body; Space Mono for data, swapping out IBM Plex everywhere. */
+   Fourth direction: the flat mint-on-white pass read as generic and static
+   — explicit feedback was "no animation, nothing special, logo and colors
+   are bad." This one keeps the light background (still no dark colors)
+   but brings back real movement (an animated jewel-tone gradient mesh,
+   the technique that got a genuine positive reaction earlier this
+   session) and adds an actual logo mark instead of plain wordmark text. */
 :root{
   --bg:#FFFFFF;
-  --surface:#EFF9F4;
-  --ink:#10201A;
-  --ink-2:#5F7268;
-  --line:rgba(16,32,26,.1);
-  --accent:#00B87C;
-  --accent-2:#0E8F63;
-  --gold:#00B87C;
-  --gold-ink:#0E8F63;
+  --surface:#F6F3FC;
+  --ink:#160F24;
+  --ink-2:#6B6478;
+  --line:rgba(22,15,36,.1);
+  --accent:#6D28D9;
+  --accent-2:#7C3AED;
+  --emerald:#059669;
+  --gold-accent:#D97706;
+  --gold:#6D28D9;
+  --gold-ink:#7C3AED;
   --ease:cubic-bezier(.16,1,.3,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -29,7 +32,7 @@ body{
 main{position:relative;z-index:1}
 h1,h2{font-family:'Sora',system-ui,sans-serif;font-weight:700;letter-spacing:-.015em;line-height:1.08;text-wrap:balance}
 a{color:inherit}
-::selection{background:rgba(0,184,124,.22)}
+::selection{background:rgba(109,40,217,.2)}
 .wrap{max-width:1080px;margin-inline:auto;padding-inline:24px}
 .skip-link{position:absolute;left:-9999px;top:0;background:var(--ink);color:#fff;padding:.6rem 1rem;z-index:200}
 .skip-link:focus{left:12px;top:12px}
@@ -52,10 +55,18 @@ body{animation:pageIn .5s var(--ease) both}
 }
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
 .wordmark{
-  font-family:'Sora',system-ui,sans-serif;font-weight:700;font-size:1.3rem;
-  text-decoration:none;flex:none;
+  display:flex;align-items:center;gap:.55rem;
+  font-family:'Sora',system-ui,sans-serif;font-weight:700;font-size:1.2rem;
+  text-decoration:none;flex:none;color:var(--ink);
 }
-.wordmark::after{content:".";color:var(--gold)}
+/* Logo mark: a gradient badge with an abstract tooth/checkmark glyph —
+   an actual symbol instead of just wordmark text + a coloured dot. */
+.logo-mark{
+  width:32px;height:32px;border-radius:9px;flex:none;
+  background:linear-gradient(135deg, var(--accent), var(--emerald));
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-mark svg{width:60%;height:60%}
 .nav-links{display:flex;gap:.85rem;font-size:.76rem;margin-right:auto;margin-left:1.2rem;overflow-x:auto;white-space:nowrap;scrollbar-width:none;-ms-overflow-style:none}
 .nav-links::-webkit-scrollbar{display:none}
 .nav-links a{text-decoration:none;color:var(--ink-2);transition:color .2s var(--ease)}
@@ -74,35 +85,54 @@ body{animation:pageIn .5s var(--ease) both}
 .btn:active{transform:scale(.98)}
 .btn-nav{padding:.55rem 1.15rem;font-size:.84rem}
 
-/* ---------- Hero (bright, bouncy tooth mark) ---------- */
+/* ---------- Hero (animated jewel-tone mesh, real movement) ---------- */
 .hero{
   position:relative;
   min-height:100vh;min-height:100svh;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
-  background:
-    radial-gradient(ellipse 60% 42% at 50% 0%, rgba(0,184,124,.1), transparent 70%);
+  background:var(--bg);
 }
-.hero-mesh{display:none}
+/* The thing that was missing: continuous, visible motion. Big saturated
+   colour pools (violet/emerald/gold) blurred and drifting slowly behind
+   the content — light background underneath, so this is still "not a
+   dark design," just one with real energy in it. */
+.hero-mesh{
+  position:absolute;inset:-15%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 46% 40% at 20% 24%, rgba(109,40,217,.32), transparent 70%),
+    radial-gradient(ellipse 50% 44% at 82% 20%, rgba(5,150,105,.28), transparent 70%),
+    radial-gradient(ellipse 44% 38% at 50% 82%, rgba(217,119,6,.22), transparent 70%),
+    radial-gradient(ellipse 40% 36% at 84% 78%, rgba(124,58,237,.22), transparent 70%);
+  filter:blur(50px) saturate(1.15);
+  animation:meshDrift 18s ease-in-out infinite;
+}
+@keyframes meshDrift{
+  0%,100%{transform:translate(0,0) scale(1) rotate(0)}
+  25%{transform:translate(3%,-3%) scale(1.08) rotate(2deg)}
+  50%{transform:translate(-2%,4%) scale(.96) rotate(-2deg)}
+  75%{transform:translate(-4%,-2%) scale(1.05) rotate(1deg)}
+}
 .tooth-diagram{
   position:relative;z-index:1;width:min(42vw,220px);margin:0 auto 1.8rem;
   aspect-ratio:1/1;border-radius:50%;
-  background:var(--surface);
+  background:linear-gradient(135deg, rgba(109,40,217,.12), rgba(5,150,105,.12));
+  box-shadow:0 20px 60px -20px rgba(109,40,217,.35);
   display:flex;align-items:center;justify-content:center;
   animation:toothIn .8s var(--ease) both, toothBob 4s ease-in-out 1s infinite;
 }
 .tooth-diagram svg{width:52%;height:52%}
-.tooth-shape{fill:var(--accent)}
+.tooth-shape{fill:url(#toothGradient)}
 @keyframes toothIn{
   0%{transform:scale(.4) rotate(-16deg);opacity:0}
   100%{transform:scale(1) rotate(0);opacity:1}
 }
 @keyframes toothBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-2deg)}}
-.spark{position:absolute;z-index:1;color:var(--accent);opacity:0;animation:sparkIn .5s var(--ease) both}
+.spark{position:absolute;z-index:1;color:var(--gold-accent);opacity:0;animation:sparkIn .5s var(--ease) both}
 .spark svg{display:block;width:100%;height:100%}
-.s1{top:14%;left:26%;width:22px;height:22px;animation-delay:.9s}
-.s2{top:22%;right:22%;width:16px;height:16px;animation-delay:1.15s}
-.s3{bottom:30%;right:28%;width:18px;height:18px;animation-delay:1.35s}
+.s1{top:14%;left:26%;width:22px;height:22px;animation-delay:.9s;color:var(--accent)}
+.s2{top:22%;right:22%;width:16px;height:16px;animation-delay:1.15s;color:var(--emerald)}
+.s3{bottom:30%;right:28%;width:18px;height:18px;animation-delay:1.35s;color:var(--gold-accent)}
 @keyframes sparkIn{0%{opacity:0;transform:scale(0) rotate(-10deg)}60%{opacity:1;transform:scale(1.15) rotate(6deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 .hero-inner{position:relative;z-index:1;text-align:center;padding:6rem 24px 4rem}
 .hero .label{display:block;margin-bottom:1.5rem}
@@ -110,7 +140,11 @@ body{animation:pageIn .5s var(--ease) both}
 @media(max-width:600px){
   .hero h1{font-size:9vw}
 }
-.hero h1 em{font-style:normal;font-weight:700;color:var(--gold-ink)}
+.hero h1 em{
+  font-style:normal;font-weight:700;
+  background:linear-gradient(100deg, var(--accent), var(--emerald));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
 .hero-sub{
   font-size:clamp(1.02rem,1.5vw,1.15rem);color:var(--ink-2);
   max-width:54ch;margin:1.8rem auto 2.5rem;
@@ -173,7 +207,7 @@ body{animation:pageIn .5s var(--ease) both}
 .cmp-tag{font-size:.7rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2)}
 .badge{font-size:.66rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:.3rem .8rem}
 .badge.lost{background:#FDECEA;color:#C5453A}
-.badge.booked{background:#DFF6EA;color:#0E8F63}
+.badge.booked{background:#DCFCE9;color:#059669}
 .cmp-name{font-weight:600;font-size:.95rem;margin-bottom:1rem}
 .tl{list-style:none;display:grid;gap:.6rem}
 .tl li{
@@ -219,8 +253,8 @@ body{animation:pageIn .5s var(--ease) both}
   border:1px solid var(--line);border-radius:10px;padding:.65rem .9rem;margin-bottom:1rem;
 }
 .mock .ans{
-  border:1px solid rgba(0,184,124,.3);border-radius:10px;
-  padding:1rem;background:rgba(0,184,124,.06);
+  border:1px solid rgba(109,40,217,.3);border-radius:10px;
+  padding:1rem;background:rgba(109,40,217,.06);
 }
 .mock .ans .src{font-size:.66rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-ink);display:block;margin-bottom:.4rem}
 .mock .ans strong{font-size:1rem}
@@ -232,13 +266,13 @@ body{animation:pageIn .5s var(--ease) both}
   font-variant-numeric:tabular-nums;
 }
 .flow .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none}
-.flow .link{width:1px;height:14px;background:rgba(0,184,124,.25);margin-left:1.35rem}
+.flow .link{width:1px;height:14px;background:rgba(109,40,217,.25);margin-left:1.35rem}
 .flow .tag{
   display:inline-block;margin-top:1rem;
   font-family:'Space Mono',monospace;
   font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--gold-ink);border:1px solid rgba(0,184,124,.3);border-radius:999px;
-  padding:.3rem .6rem;background:rgba(0,184,124,.06);
+  color:var(--gold-ink);border:1px solid rgba(109,40,217,.3);border-radius:999px;
+  padding:.3rem .6rem;background:rgba(109,40,217,.06);
 }
 .bars{display:grid;gap:1.1rem}
 .bars .row{display:grid;grid-template-columns:1fr auto;gap:.4rem;font-size:.84rem;font-weight:500}
@@ -278,7 +312,7 @@ section{scroll-margin-top:64px}
   font-variant-numeric:tabular-nums;
   transition:border-color .2s var(--ease),color .2s var(--ease),background .2s var(--ease);
 }
-.pill:hover span{border-color:rgba(0,184,124,.5);color:var(--ink)}
+.pill:hover span{border-color:rgba(109,40,217,.5);color:var(--ink)}
 .pill input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
 .pill input:focus-visible+span{outline:2px solid var(--gold-ink);outline-offset:2px}
 .calc-result{border-top:1px solid var(--line);padding-top:2rem}
@@ -318,7 +352,7 @@ form{display:grid;grid-template-columns:1fr;gap:1.3rem}
   background-repeat:no-repeat;background-position:right 1rem center;
 }
 .field textarea{min-height:104px;resize:vertical}
-.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,184,124,.15)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(109,40,217,.15)}
 .two-col{display:grid;grid-template-columns:1fr;gap:1.3rem}
 @media(min-width:620px){.two-col{grid-template-columns:1fr 1fr}}
 form .btn{width:100%;padding:.95rem 1.7rem}
@@ -361,6 +395,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
   .float{animation:none}
   .tooth-diagram{animation:none}
   .spark{animation:none;opacity:1}
+  .hero-mesh{animation:none}
   .stats-band::before{position:absolute}
   body{animation:none}
 }
