@@ -14,10 +14,10 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Processa — Conversion Infrastructure for Premium Dental Clinics">
 <meta name="twitter:description" content="We stop the six-figure pipeline hemorrhage and convert it into predictable patient acquisition.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231B1512'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='38' font-weight='700' fill='%23FF6B4A' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23FFFFFF'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='38' font-weight='700' fill='%2300B87C' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,500italic&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script type="application/ld+json">
 {
@@ -74,14 +74,13 @@
 
 <header class="nav">
   <div class="wrap nav-inner">
-    <a class="wordmark" href="index.html" aria-label="Processa — home">Processa</a>
+    <a class="wordmark" href="#top" aria-label="Processa — home">Processa</a>
     <nav class="nav-links" aria-label="Primary">
-      <a href="index.html" aria-current="page">Home</a>
-      <a href="services.html">Services</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="contact.html">Contact</a>
+      <a href="#services">Services</a>
+      <a href="#leak">Pricing</a>
+      <a href="#book">Contact</a>
     </nav>
-    <a class="btn btn-nav" href="contact.html">Book a call</a>
+    <a class="btn btn-nav" href="#book">Book a call</a>
   </div>
 </header>
 
@@ -89,13 +88,13 @@
 
   <!-- Hero -->
   <section class="hero" id="top" aria-labelledby="hero-h">
-    <div class="hero-mesh" aria-hidden="true"></div>
     <div class="hero-inner">
-      <div class="tooth-diagram reveal" aria-hidden="true">
-        <svg viewBox="0 0 200 240" fill="none">
-          <path class="tooth-path p1" d="M100,20 C60,20 35,45 32,75 C29,105 45,120 55,128 C48,140 45,155 48,165 C51,175 60,172 65,160 C70,150 75,145 82,150 C88,155 92,168 100,168 C108,168 112,155 118,150 C125,145 130,150 135,160 C140,172 149,175 152,165 C155,155 152,140 145,128 C155,120 171,105 168,75 C165,45 140,20 100,20 Z"/>
-          <path class="tooth-path p2" d="M78,160 C72,185 69,210 73,230"/>
-          <path class="tooth-path p3" d="M122,160 C128,185 131,210 127,230"/>
+      <span class="spark s1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg></span>
+      <span class="spark s2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg></span>
+      <span class="spark s3" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/></svg></span>
+      <div class="tooth-diagram" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <path class="tooth-shape" d="M50,12 C34,12 22,24 22,40 C22,54 30,62 36,66 C34,74 33,82 36,88 C38,93 44,90 46,82 C47,77 49,75 50,75 C51,75 53,77 54,82 C56,90 62,93 64,88 C67,82 66,74 64,66 C70,62 78,54 78,40 C78,24 66,12 50,12 Z"/>
         </svg>
       </div>
       <span class="label reveal">AI automation for premium dental clinics</span>
@@ -125,15 +124,216 @@
     </div>
   </section>
 
-  <!-- Teaser: What we solve -->
-  <section class="section" aria-labelledby="teaser-h">
+  <!-- What we solve -->
+  <section class="section" id="services" aria-labelledby="svc-h">
     <div class="wrap">
       <div class="section-head reveal">
         <span class="label">What we solve</span>
-        <h2 id="teaser-h">Every empty slot has a cause. <em>We fix three.</em></h2>
-        <p class="lede">Not a web design shop. Infrastructure that keeps the diary full — patients asking AI where to go, enquiries answered in minutes instead of days, and a pipeline that grows on schedule instead of by chance.</p>
+        <h2 id="svc-h">Every empty slot has a cause. <em>We fix three.</em></h2>
+        <p class="lede">Not a web design shop. Infrastructure that keeps the diary full.</p>
       </div>
-      <p class="reveal d1"><a class="btn" href="services.html">See how it works</a></p>
+
+      <div class="compare-head reveal">
+        <h3>The £3,000-a-patient problem</h3>
+        <p>Same enquiry, same clinic. The only difference is the system behind it.</p>
+      </div>
+      <div class="compare">
+        <article class="cmp-card reveal">
+          <header>
+            <span class="cmp-tag">Without a system</span>
+            <span class="badge lost">Lost</span>
+          </header>
+          <p class="cmp-name">Mrs. Harper, implant enquiry</p>
+          <ul class="tl">
+            <li><span>Website form submitted</span><time>9:04 pm</time></li>
+            <li><span>Seen by reception</span><time>next day, 11:30 am</time></li>
+            <li><span>First call attempt. No answer.</span><time>4:15 pm</time></li>
+          </ul>
+          <p class="cmp-outcome">Booked with a competitor. £3,000 written off.</p>
+        </article>
+        <article class="cmp-card reveal d1">
+          <header>
+            <span class="cmp-tag">With Processa</span>
+            <span class="badge booked">Booked</span>
+          </header>
+          <p class="cmp-name">Mrs. Harper, implant enquiry</p>
+          <ul class="tl">
+            <li><span>Website form submitted</span><time>9:04 pm</time></li>
+            <li><span>AI replies and qualifies</span><time>9:05 pm</time></li>
+            <li><span>Consultation booked in the diary</span><time>9:11 pm</time></li>
+          </ul>
+          <p class="cmp-outcome">In your diary before competitors open. £3,000 secured.</p>
+        </article>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar reveal">
+          <div>
+            <span class="label">01</span>
+            <h3>Patients ask AI where to go. <em>It never mentions you.</em></h3>
+            <div class="body">
+              <p>We rebuild your platform so ChatGPT, Perplexity and Gemini recommend <strong>your clinic, by name</strong>.</p>
+              <p class="outcome">You become the answer, not a result.</p>
+            </div>
+          </div>
+          <div class="pillar-visual mock float" aria-hidden="true">
+            <p class="q">"Best implant clinic near me?"</p>
+            <div class="ans">
+              <span class="src">AI answer · cited source</span>
+              <strong>Your clinic</strong>
+              <p>Recommended for premium implantology, verified patient outcomes and same-week consultations.</p>
+            </div>
+          </div>
+        </div>
+        <div class="pillar rev reveal">
+          <div>
+            <span class="label">02</span>
+            <h3>Enquiries at 9pm. <em>Replies on Tuesday.</em></h3>
+            <div class="body">
+              <p>Our automation replies in <strong>one minute</strong>, qualifies the patient and books them into your diary. <strong>Zero manual steps.</strong></p>
+              <p class="outcome">Follow-up in minutes, not days.</p>
+            </div>
+          </div>
+          <div class="pillar-visual mock float" aria-hidden="true">
+            <div class="flow">
+              <div class="node"><span class="dot"></span>New enquiry, 21:47</div>
+              <div class="link"></div>
+              <div class="node"><span class="dot"></span>AI qualifies &amp; replies, 21:48</div>
+              <div class="link"></div>
+              <div class="node"><span class="dot"></span>Booked in the diary, 21:52</div>
+              <p class="tag">0 manual steps</p>
+            </div>
+          </div>
+        </div>
+        <div class="pillar reveal">
+          <div>
+            <span class="label">03</span>
+            <h3>Growth built on referrals <em>you can't control.</em></h3>
+            <div class="body">
+              <p>Automated outreach delivers new opportunities <strong>on schedule</strong>, in volumes you decide.</p>
+              <p class="outcome">Pipeline as a controlled variable.</p>
+            </div>
+          </div>
+          <div class="pillar-visual mock float" aria-hidden="true">
+            <div class="bars">
+              <div class="row"><span>Delivered</span><span class="v">98.4%</span><div class="track"><i style="width:98%"></i></div></div>
+              <div class="row"><span>Opened</span><span class="v">61.2%</span><div class="track"><i style="width:61%"></i></div></div>
+              <div class="row"><span>Replied</span><span class="v">11.7%</span><div class="track"><i style="width:12%"></i></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Leak -->
+  <section class="section bordered" id="leak" aria-labelledby="leak-h">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">The 60-second check</span>
+        <h2 id="leak-h">How much is your clinic leaking?</h2>
+        <p class="lede">Every premium clinic leaks in the same three places: invisible to AI search, slow to answer, manual to scale. The loss compounds quietly, so nobody fixes it. Answer three questions and see the size of yours.</p>
+      </div>
+      <div class="calc-panel reveal" id="leak-calc">
+        <div class="calc-qs">
+          <fieldset class="calc-q">
+            <legend>High-value enquiries per month</legend>
+            <div class="pills">
+              <label class="pill"><input type="radio" name="calc-enq" value="12"><span>1–20</span></label>
+              <label class="pill"><input type="radio" name="calc-enq" value="35" checked><span>21–50</span></label>
+              <label class="pill"><input type="radio" name="calc-enq" value="75"><span>51–100</span></label>
+              <label class="pill"><input type="radio" name="calc-enq" value="120"><span>100+</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="calc-q">
+            <legend>Typical first-response time</legend>
+            <div class="pills">
+              <label class="pill"><input type="radio" name="calc-resp" value="0.05"><span>Under 5 min</span></label>
+              <label class="pill"><input type="radio" name="calc-resp" value="0.22"><span>Within 1 hour</span></label>
+              <label class="pill"><input type="radio" name="calc-resp" value="0.40" checked><span>Within 4 hours</span></label>
+              <label class="pill"><input type="radio" name="calc-resp" value="0.55"><span>Next day</span></label>
+              <label class="pill"><input type="radio" name="calc-resp" value="0.70"><span>2+ days</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="calc-q">
+            <legend>Average treatment value</legend>
+            <div class="pills">
+              <label class="pill"><input type="radio" name="calc-val" value="500"><span>£500</span></label>
+              <label class="pill"><input type="radio" name="calc-val" value="1500"><span>£1,500</span></label>
+              <label class="pill"><input type="radio" name="calc-val" value="3000" checked><span>£3,000</span></label>
+              <label class="pill"><input type="radio" name="calc-val" value="6000"><span>£6,000+</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="calc-result">
+          <span class="label">Estimated annual leak</span>
+          <p class="r-num" aria-live="polite"><span class="aff">£</span><span id="leak-out">0</span></p>
+          <p class="r-sub">Lost to slow response alone, before AI-search invisibility is counted. Most of it is recoverable. Response time is software.</p>
+          <a class="btn" href="#book" id="calc-cta">Seal this leak</a>
+          <p class="footnote">Illustrative model: contact-rate decay by response time, a 30% close rate, your treatment value. A starting point, not a promise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Book a Call -->
+  <section class="section bordered" id="book" aria-labelledby="book-h">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="label">The only next step</span>
+        <h2 id="book-h">Book a call</h2>
+        <p class="lede">Thirty minutes. We calculate your pipeline leak and show you the infrastructure that stops it. No deck, no pressure. Mathematics.</p>
+      </div>
+      <div class="form-shell reveal">
+        <p class="leak-note" id="leak-note" hidden>Your estimated annual leak: <strong id="leak-note-num">£0</strong>. We'll bring the full mathematics to the call.</p>
+        <form name="book-call" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="book-call">
+          <input type="hidden" name="estimated-leak" id="estimated-leak-field" value="">
+          <p class="hidden-field" aria-hidden="true">
+            <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+          </p>
+          <div class="two-col">
+            <div class="field">
+              <label for="f-name">Name <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-clinic">Clinic name <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-clinic" name="clinic" type="text" autocomplete="organization" required>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="field">
+              <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="f-country">Country <span class="req" aria-hidden="true">*</span></label>
+              <select id="f-country" name="country" required>
+                <option value="" selected disabled>Select country</option>
+                <option>UK</option>
+                <option>Ireland</option>
+                <option>Germany</option>
+                <option>Netherlands</option>
+                <option>Spain</option>
+                <option>Other EU</option>
+                <option>Australia</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-bottleneck">Biggest bottleneck</label>
+            <textarea id="f-bottleneck" name="bottleneck" rows="4" placeholder="e.g. leads come in but nobody follows up in time"></textarea>
+          </div>
+          <button class="btn" type="submit">Book a call</button>
+          <p class="form-error" role="alert" id="form-error">Something interrupted the request. Please try again, or email us directly below.</p>
+          <p class="form-foot">Replies within one business day. Your details stay with us.</p>
+        </form>
+        <div class="confirm" id="confirm" role="status" tabindex="-1">
+          <h3>Request received.</h3>
+          <p>We'll reply within one business day with two or three time slots, and we'll arrive with your leak already estimated.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -141,12 +341,7 @@
 
 <footer>
   <div class="wrap foot-inner">
-    <a class="wordmark" href="index.html" aria-label="Processa — home">Processa</a>
-    <ul class="foot-links">
-      <li><a href="services.html">Services</a></li>
-      <li><a href="pricing.html">Pricing</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
+    <a class="wordmark" href="#top" aria-label="Processa — back to top">Processa</a>
     <p class="foot-meta">&copy; 2026 Processa. All rights reserved. <a href='privacy.html'>Privacy policy</a></p>
   </div>
 </footer>

@@ -2,26 +2,8 @@
   'use strict';
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ================= Tooth diagram (SVG line-draw) =================
-     Same signature across every page that includes it: a stylised molar
-     outline that draws itself in like a technical drawing being plotted.
-     Measures each path's real length so the animation traces the exact
-     outline instead of an approximation. */
-  var toothPaths = document.querySelectorAll('.tooth-path');
-  if(toothPaths.length){
-    toothPaths.forEach(function(path){
-      var len = path.getTotalLength();
-      path.style.strokeDasharray = len;
-      path.style.strokeDashoffset = reduceMotion ? 0 : len;
-    });
-    if(!reduceMotion){
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          toothPaths.forEach(function(path){ path.style.strokeDashoffset = 0; });
-        });
-      });
-    }
-  }
+  /* Tooth mark entrance/floating idle animation is pure CSS now (see
+     .tooth-diagram / .spark in styles.css) — no JS needed for it. */
 
   /* ================= Counters ================= */
   function formatNum(n){ return Math.round(n).toLocaleString('en-GB'); }
@@ -69,12 +51,15 @@
     revealEls.forEach(function(el){ revealObs.observe(el); });
   }
 
-  /* ================= Leak calculator (pricing.html) =================
-     Estimated leak is saved to localStorage so contact.html can read it
-     back and show the same figure next to the booking form, even though
-     the calculator now lives on a different page. */
+  /* ================= Leak calculator =================
+     Calculator and booking form are back on the same page (single
+     landing page again), so the estimate just writes straight into the
+     form's hidden field and note below — no cross-page handoff needed. */
   var calc = document.getElementById('leak-calc');
   var leakOut = document.getElementById('leak-out');
+  var leakField = document.getElementById('estimated-leak-field');
+  var leakNote = document.getElementById('leak-note');
+  var leakNoteNum = document.getElementById('leak-note-num');
   var shownLeak = 0;
 
   function picked(name){
@@ -105,33 +90,18 @@
   function updateLeak(){
     var leak = computeLeak();
     animateLeak(leak);
-    try { localStorage.setItem('processa-leak-estimate', String(leak)); } catch(e){}
+    var pretty = '£' + formatNum(leak);
+    leakField.value = pretty;
+    leakNoteNum.textContent = pretty;
+    leakNote.hidden = false;
   }
   if(calc){
     calc.addEventListener('change', updateLeak);
     shownLeak = computeLeak();
     renderLeak(shownLeak);
-    try { localStorage.setItem('processa-leak-estimate', String(shownLeak)); } catch(e){}
   }
 
-  /* ================= Leak note + hidden field (contact.html) =================
-     Reads back whatever pricing.html last saved, if anything. If the
-     visitor never touched the calculator, this section just stays hidden. */
-  var leakField = document.getElementById('estimated-leak-field');
-  var leakNote = document.getElementById('leak-note');
-  var leakNoteNum = document.getElementById('leak-note-num');
-  if(leakNote && leakNoteNum && leakField){
-    var saved = null;
-    try { saved = localStorage.getItem('processa-leak-estimate'); } catch(e){}
-    if(saved){
-      var pretty = '£' + formatNum(+saved);
-      leakField.value = pretty;
-      leakNoteNum.textContent = pretty;
-      leakNote.hidden = false;
-    }
-  }
-
-  /* ================= Netlify form (contact.html) ================= */
+  /* ================= Netlify form ================= */
   var form = document.querySelector('form[name="book-call"]');
   if(form){
     var confirmBox = document.getElementById('confirm');
@@ -165,26 +135,6 @@
         btn.textContent = 'Book a call';
         errorBox.classList.add('show');
       });
-    });
-  }
-
-  /* ================= Page-transition fade-out =================
-     Pairs with the pageIn fade-in in styles.css. Only for same-site
-     internal links (not #anchors on the current page, not external),
-     so navigating between pages feels like one continuous site instead
-     of a hard cut.  */
-  if(!reduceMotion){
-    document.addEventListener('click', function(e){
-      var link = e.target.closest('a');
-      if(!link) return;
-      var href = link.getAttribute('href');
-      if(!href || href.charAt(0) === '#') return;
-      if(link.target && link.target !== '' && link.target !== '_self') return;
-      if(link.origin && link.origin !== window.location.origin) return;
-      e.preventDefault();
-      document.body.style.transition = 'opacity .25s ' + getComputedStyle(document.documentElement).getPropertyValue('--ease');
-      document.body.style.opacity = '0';
-      setTimeout(function(){ window.location.href = href; }, 240);
     });
   }
 })();
