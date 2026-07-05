@@ -84,12 +84,16 @@ body{
   font-family:'Geist',system-ui,-apple-system,'Helvetica Neue',sans-serif;
   font-size:1rem;line-height:1.6;
   color:var(--ink);
-  /* semi-transparent (not opaque var(--bg)) on purpose: the shader canvas
-     sits fixed behind everything (see .shader-wrap), and this lets its
-     color bleed through every section's empty cream space as you scroll,
-     not just the hero. Cards/forms below stay fully opaque so dense text
-     (compare table, form fields) is never fighting the shader for contrast. */
-  background:rgba(250,248,244,.55);
+  /* Opaque, not transparent — this is the fallback layer. The shader canvas
+     (.shader-wrap) sits fixed behind body's content but in FRONT of body's
+     own background in paint order, so it already bleeds through every
+     section's empty space on its own (sections don't set their own opaque
+     background). Making body itself semi-transparent was a mistake: if
+     WebGL fails to render (phones vary a lot here), body's cream is all
+     that's left, and at 55% it read as a washed-out, low-contrast page —
+     exactly what broke text visibility on mobile. Full opacity here is the
+     safe base; the shader still shows whenever it successfully renders. */
+  background:var(--bg);
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
@@ -769,7 +773,7 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
       window.addEventListener('scroll', updateScrollSpeed, { passive: true });
       updateScrollSpeed();
 
-      var rafId = null, shaderVisible = true;
+      var rafId = null;
       var loop = function(){
         uniforms.time.value += scrollSpeed;
         renderer.render(scene, camera);
@@ -778,14 +782,14 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
       var start = function(){ if(rafId === null){ loop(); } };
       var stop = function(){ if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; } };
 
-      if('IntersectionObserver' in window){
-        var shaderObs = new IntersectionObserver(function(entries){
-          shaderVisible = entries[0].isIntersecting;
-          if(shaderVisible){ start(); } else { stop(); }
-        }, { threshold: 0.05 });
-        shaderObs.observe(document.getElementById('top'));
+      // The shader now covers the whole page (fixed), not just the hero, so
+      // it should only pause when the tab itself is hidden — not when the
+      // hero specifically scrolls out of view. The old hero-only check was
+      // exactly the bug: scroll past the hero and it stopped rendering for
+      // the rest of the page, including after jumping back with the nav link.
+      {
         document.addEventListener('visibilitychange', function(){
-          if(document.hidden){ stop(); } else if(shaderVisible){ start(); }
+          if(document.hidden){ stop(); } else { start(); }
         });
       }
       start();
