@@ -83,10 +83,17 @@ html{scroll-behavior:smooth;scroll-padding-top:64px}
 body{
   font-family:'Geist',system-ui,-apple-system,'Helvetica Neue',sans-serif;
   font-size:1rem;line-height:1.6;
-  color:var(--ink);background:var(--bg);
+  color:var(--ink);
+  /* semi-transparent (not opaque var(--bg)) on purpose: the shader canvas
+     sits fixed behind everything (see .shader-wrap), and this lets its
+     color bleed through every section's empty cream space as you scroll,
+     not just the hero. Cards/forms below stay fully opaque so dense text
+     (compare table, form fields) is never fighting the shader for contrast. */
+  background:rgba(250,248,244,.55);
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
+main{position:relative;z-index:1}
 h1,h2{font-family:'Playfair Display',Georgia,serif;font-weight:600;letter-spacing:-.025em;line-height:1.08;text-wrap:balance}
 a{color:inherit}
 ::selection{background:rgba(184,150,62,.2)}
@@ -403,12 +410,17 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
    soft gradient-blob pass — this is the "crazy" version. Blended with
    multiply so it reads as vivid color moving through the page instead
    of a black rectangle sitting on top of it. */
-.shader-wrap{position:absolute;inset:0;overflow:hidden;z-index:0;mix-blend-mode:multiply;opacity:.85}
+/* Fixed to the viewport (not just the hero), so it shows through every
+   section as you scroll — the page's various backgrounds below are made
+   semi-transparent (see "Bleed-through" block) instead of fully opaque,
+   so the shader reads as one continuous backdrop behind the whole site. */
+.shader-wrap{position:fixed;inset:0;overflow:hidden;z-index:0;mix-blend-mode:multiply;opacity:.85;pointer-events:none}
 #shaderCanvas{display:block;width:100%;height:100%}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body>
+<div class="shader-wrap" aria-hidden="true"><canvas id="shaderCanvas"></canvas></div>
 <a class="skip-link" href="#main">Skip to content</a>
 
 <header class="nav">
@@ -422,7 +434,6 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
 
   <!-- Hero -->
   <section class="hero" id="top" aria-labelledby="hero-h">
-    <div class="shader-wrap" aria-hidden="true"><canvas id="shaderCanvas"></canvas></div>
     <canvas id="tooth" aria-hidden="true"></canvas>
     <div class="hero-veil" aria-hidden="true"></div>
     <div class="hero-inner">
@@ -735,9 +746,23 @@ footer{border-top:1px solid var(--line);padding:2.5rem 0}
       resize();
       window.addEventListener('resize', resize);
 
+      // Something extra: speed reacts to scroll position, not just a flat
+      // tick rate. Near the top it drifts slowly; the further you scroll
+      // into the page, the faster/more energetic it gets, capped so it
+      // never becomes distracting or motion-sick-inducing.
+      var scrollSpeed = 0.05;
+      var updateScrollSpeed = function(){
+        var doc = document.documentElement;
+        var maxScroll = doc.scrollHeight - doc.clientHeight;
+        var progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
+        scrollSpeed = 0.05 + progress * 0.09;
+      };
+      window.addEventListener('scroll', updateScrollSpeed, { passive: true });
+      updateScrollSpeed();
+
       var rafId = null, shaderVisible = true;
       var loop = function(){
-        uniforms.time.value += 0.05;
+        uniforms.time.value += scrollSpeed;
         renderer.render(scene, camera);
         rafId = requestAnimationFrame(loop);
       };
